@@ -1,9 +1,13 @@
 #include "timer.h"
+#include "settings.h"
 #include <jansson.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <time.h>
+
+atomic_bool splits_millis = false;
 
 long long ls_time_now(void)
 {
@@ -109,7 +113,14 @@ void ls_time_millis_string(char* seconds, char* millis, long long time)
 
 void ls_split_string(char* string, long long time)
 {
-    ls_time_string_format(string, NULL, time, 0, 0, 1);
+    //Checks settings for "splits_millis" to see whether to compact strings
+    if (atomic_load(&splits_millis)) {
+        ls_time_string_format(string, NULL, time, 0, 0, 1);
+    } else {
+        ls_time_string_format(string, NULL, time, 0, 0, 0);
+    
+    }
+    
 }
 
 void ls_delta_string(char* string, long long time)
