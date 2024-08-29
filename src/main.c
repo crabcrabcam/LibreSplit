@@ -974,7 +974,7 @@ static void ls_app_activate(GApplication* app)
             atomic_store(&auto_splitter_enabled, 1);
         }
     }
-    //Checks settings for "splits_millis" to see whether to compact strings in splits timer
+    // Checks settings for "splits_millis" to see whether to compact strings in splits timer
     if (get_setting_value("libresplit", "splits_millis") != NULL) {
         if (json_is_false(get_setting_value("libresplit", "splits_millis"))) {
             atomic_store(&splits_millis, 1);
