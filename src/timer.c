@@ -308,6 +308,15 @@ int ls_game_create(ls_game** game_ptr, const char* path, char** error_msg)
     if (ref) {
         game->height = json_integer_value(ref);
     }
+    // copy autosplitter
+    ref = json_object_get(json, "auto_splitter_file");
+    if (ref) {
+        game->auto_splitter_file = strdup(json_string_value(ref));
+        if (!game->auto_splitter_file) {
+            error = 1;
+            goto game_create_done;
+        }
+    }
     // get delay
     ref = json_object_get(json, "start_delay");
     if (ref) {
@@ -550,6 +559,9 @@ int ls_game_save(const ls_game* game)
     }
     if (game->height) {
         json_object_set_new(json, "height", json_integer(game->height));
+    }
+    if (game->auto_splitter_file) {
+        json_object_set_new(json, "auto_splitter_file", json_string(game->auto_splitter_file));
     }
     const int json_dump_result = json_dump_file(json, game->path, JSON_PRESERVE_ORDER | JSON_INDENT(2));
     if (json_dump_result) {
